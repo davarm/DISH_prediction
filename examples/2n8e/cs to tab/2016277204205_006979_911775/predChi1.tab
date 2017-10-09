@@ -1,0 +1,55 @@
+REMARK TALOS-N Protein Chi1 Conformation Prediction Table
+REMARK  Prediction Summary for Chemical Shift Input 2n8e.tab
+REMARK 
+REMARK  Q_Gm is the probability to be with a g- (gauche-) rotamer.
+REMARK  Q_Gp is the probability to be with a g+ (gauche+) rotamer.
+REMARK  Q_t  is the probability to be with a t  (trans)   rotamer.
+REMARK 
+REMARK  CS_COUNT is the number of chemical shifts in the query triplets
+REMARK  used to predict chi1 conformation.
+REMARK 
+REMARK  CLASS is the classification of the prediction result:
+REMARK    na: no chi1 prediction was made.
+REMARK    g-/g+/t: 3-state chi1 prediction
+REMARK 
+REMARK Reference:
+REMARK  Y. Shen, and A. Bax:
+REMARK  Protein backbone and sidechain torsion angles predicted from 
+REMARK  NMR chemical shifts using artificial neural networks
+REMARK  J. Biomol. NMR, 56, 227-241(2013).
+REMARK 
+REMARK  TALOS-N Version 4.20 Rev 2016.251.16.40 TALOSN_INFO
+
+
+VARS   RESID RESNAME CS_COUNT Q_Gm Q_Gp Q_T CLASS CHI1 DCHI1 
+FORMAT %4d %s %2d %5.3f %5.3f %5.3f  %-2s %6.1f %6.1f
+
+   1 c  9 0.333 0.333 0.333  na 9999.0 9999.0
+   2 R 14 0.678 0.195 0.126  g-  -62.5    8.3
+   3 I 12 0.793 0.150 0.057  g-  -58.6    8.6
+   5 N 12 0.556 0.182 0.262  na 9999.0 9999.0
+   6 Q 15 0.702 0.104 0.194  g-  -60.9    6.8
+   7 K 15 0.680 0.110 0.210  g-  -59.0    8.6
+   8 c 14 0.279 0.593 0.128  na 9999.0 9999.0
+   9 F 14 0.692 0.142 0.167  g-  -70.0    8.3
+  10 Q 14 0.553 0.097 0.350  na 9999.0 9999.0
+  11 H 15 0.618 0.262 0.120  g-  -59.7    7.4
+  12 L 14 0.692 0.045 0.263  g-  -70.2    5.5
+  13 D 13 0.512 0.131 0.357  na 9999.0 9999.0
+  14 D 13 0.628 0.076 0.296  g-  -73.6    8.5
+  15 c 13 0.631 0.077 0.292  g-  -70.8    9.8
+  16 c 14 0.722 0.139 0.139  g-  -67.7    7.9
+  17 S 14 0.374 0.518 0.107  na 9999.0 9999.0
+  18 R 15 0.658 0.071 0.271  g-  -58.0   10.4
+  19 K 15 0.576 0.093 0.331  na 9999.0 9999.0
+  20 c 15 0.220 0.058 0.723  t  -176.9   11.8
+  21 N 15 0.232 0.707 0.061  g+   68.7    6.4
+  22 R 15 0.639 0.112 0.250  g-  -65.7   10.9
+  23 F 15 0.864 0.107 0.028  g-  -55.9    6.6
+  24 N 15 0.618 0.046 0.336  g-  -73.9   13.9
+  25 K 15 0.636 0.182 0.182  g-  -62.7    8.6
+  26 c 15 0.227 0.227 0.546  na 9999.0 9999.0
+  27 V 15 0.742 0.073 0.185  g-  -55.4    6.7
+  28 L 13 0.825 0.050 0.125  g-  -67.1    9.0
+  30 E 13 0.528 0.195 0.277  na 9999.0 9999.0
+  31 T 14 0.169 0.765 0.066  g+   63.5   10.0

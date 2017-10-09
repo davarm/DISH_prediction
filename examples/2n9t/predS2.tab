@@ -1,0 +1,36 @@
+REMARK  Predicted order parameter (S2) from backbone chemical shifts for 2n9t.tab
+REMARK    from David Wishart's RCI method, JACS, 127(43), 14970-14971
+
+VARS RESID RESNAME CS_CNT CS_CNT_R2 S2 
+FORMAT %4d %1s %2d %2d %8.3f 
+
+    1 Y  8  3    0.784
+    2 c 13  5    0.782
+    3 Q 14  5    0.798
+    4 K 14  4    0.811
+    5 W 14  5    0.828
+    6 M 15  5    0.814
+    7 W 15  5    0.833
+    8 T 15  5    0.859
+    9 c 15  5    0.908
+   10 D 15  5    0.881
+   11 S 15  5    0.846
+   12 E 15  5    0.766
+   13 R 15  5    0.761
+   14 K 15  5    0.773
+   15 c 15  5    0.842
+   16 c 15  5    0.851
+   17 E 14  5    0.841
+   18 G 14  4    0.826
+   19 M 14  5    0.842
+   20 V 15  5    0.862
+   21 c 15  5    0.879
+   22 R 15  5    0.875
+   23 L 15  5    0.878
+   24 W 15  5    0.876
+   25 c 15  5    0.878
+   26 K 15  5    0.846
+   27 K 15  5    0.799
+   28 K 15  5    0.706
+   29 L 15  5    0.621
+   30 W 10  5    0.573

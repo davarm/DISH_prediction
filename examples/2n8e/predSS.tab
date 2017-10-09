@@ -1,0 +1,54 @@
+REMARK Secondary Structure Prediction for Chemical Shift Input 2n8e.tab
+ 
+REMARK     H-Helix    E-Strand   L-Coil (Chemical shift based)
+REMARK     h-Helix    e-Strand   c-Coil (Sequence based)
+ 
+REMARK Reference:
+REMARK  Y. Shen, and A. Bax:
+REMARK  Protein backbone and sidechain torsion angles predicted from NMR
+REMARK  chemical shifts using artificial neural networks
+REMARK  J. Biomol. NMR, 56, 227-241(2013).
+ 
+DATA FIRST_RESID 1
+ 
+DATA SEQUENCE     cRIPNQKcFQ HLDDccSRKc NRFNKcVLPE TGGG
+DATA PREDICTED_SS LLLLLLLLLL LLLLLLLLEE LLLLEEELLL LLLL
+DATA CONFIDENCE   0588885125 2578878715 5887177689 9870
+
+VARS RESID RESNAME CS_CNT CS_CNT_R2 Q_H Q_E Q_L CONFIDENCE SS_CLASS
+FORMAT %4d %1s %2d %2d %8.3f %8.3f %8.3f %4.2f %s
+
+    1 c  9  4    0.333    0.333    0.333 0.00 L
+    2 R 14  5    0.010    0.196    0.794 0.60 L
+    3 I 13  5    0.020    0.063    0.917 0.85 L
+    4 P 13  3    0.050    0.040    0.909 0.86 L
+    5 N 13  5    0.055    0.036    0.909 0.85 L
+    6 Q 15  5    0.051    0.067    0.882 0.81 L
+    7 K 15  5    0.000    0.217    0.783 0.57 L
+    8 c 14  5    0.014    0.400    0.586 0.19 L
+    9 F 14  4    0.002    0.368    0.630 0.26 L
+   10 Q 14  5    0.161    0.099    0.740 0.58 L
+   11 H 15  5    0.337    0.067    0.596 0.26 L
+   12 L 14  5    0.187    0.035    0.777 0.59 L
+   13 D 13  4    0.102    0.039    0.858 0.76 L
+   14 D 13  4    0.056    0.066    0.878 0.81 L
+   15 c 13  5    0.054    0.068    0.878 0.81 L
+   16 c 14  4    0.114    0.056    0.830 0.72 L
+   17 S 14  5    0.058    0.023    0.919 0.86 L
+   18 R 15  5    0.056    0.092    0.852 0.76 L
+   19 K 15  5    0.003    0.572    0.425 0.15 E
+   20 c 15  5    0.031    0.780    0.189 0.59 E
+   21 N 15  5    0.007    0.209    0.783 0.57 L
+   22 R 15  5    0.019    0.048    0.932 0.88 L
+   23 F 15  5    0.053    0.054    0.892 0.84 L
+   24 N 15  5    0.068    0.077    0.854 0.78 L
+   25 K 15  5    0.000    0.560    0.440 0.12 E
+   26 c 15  5    0.000    0.867    0.133 0.73 E
+   27 V 15  5    0.035    0.878    0.087 0.79 E
+   28 L 13  5    0.001    0.172    0.827 0.66 L
+   29 P 13  3    0.020    0.049    0.931 0.88 L
+   30 E 13  5    0.026    0.028    0.947 0.92 L
+   31 T 14  5    0.020    0.038    0.942 0.90 L
+   32 G 13  4    0.024    0.044    0.933 0.89 L
+   33 G 12  4    0.035    0.099    0.866 0.77 L
+   34 G  8  4    0.333    0.333    0.333 0.00 L
