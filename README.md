@@ -10,7 +10,7 @@ Disulfide bonds (cystines) are essential to the structure and function of disufi
 # DISH
 DISH is a two stage support vector machine (SVM) that predicts the χ1 and χ2 angles of cystine angles based on chemical shift and structural inputs. The workflow is defined below
 
-![Alt text](./images/method_updated.png)  
+![Alt text](./images/method.png)  
 
 # Installation
 For Linux based distributions.

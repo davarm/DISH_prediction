@@ -23,7 +23,7 @@ import os,sys
 #
 
 peptide = sys.argv[1]
-path = "./"+peptide
+path = "./peptides/"+peptide
 #------------------------------------------------------------------------
 # Create ordered dictionaries to store all relevant information
 #------------------------------------------------------------------------
@@ -462,5 +462,5 @@ df_split['before_psi'] = df_split['before_psi'].replace('N/A',63 )
 
 print df_split
 df_split                        = df_split.replace(r'\s+', np.nan, regex=True)
-df_split.to_csv('DISH.csv',index = False)
+df_split.to_csv(path+'/DISH_inputs.csv',index = False)
 			# print df 

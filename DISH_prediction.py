@@ -11,6 +11,7 @@ import os
 os.getcwd()
 
 path    = ('./SVMs/')
+get = open("./peptides/"+sys.argv[1]+"/DISH_prediction.txt",'w')
 
 # Load the SVMs, saved as .pkl files in 'SVMs' directory
 clf_x1_stage1     = joblib.load(path+'x1_stage1.pkl')
@@ -19,7 +20,7 @@ clf_x2_stage1     = joblib.load(path+'x2_stage1.pkl')
 clf_x2_stage2     = joblib.load(path+'x2_stage2.pkl')
 
 # Read the desired inputs into a dataframe
-df                = pd.read_csv('DISH.csv',sep = ',', skipinitialspace = False)
+df                = pd.read_csv("./peptides/"+sys.argv[1]+'/DISH_inputs.csv',sep = ',', skipinitialspace = False)
 
 
 
@@ -135,12 +136,16 @@ def x2_prediction(inputs):
 
 
 print '{:5s} {:4s} {:8s} {:4s} {:2s}'.format('Res','X1',"Prob.",'X2',"Prob.")
+get.write('{:5s} {:4s} {:8s} {:4s} {:2s}'.format('Res','X1',"Prob.",'X2',"Prob."))
+get.write('\n')
 for index,row in df.iterrows():
 	x1_pred   = x1_prediction(row)
 	row['x1'] = x1_pred[0]
 	x2_pred   = x2_prediction(row)
-	print '{:3d} {:4d} {:8.4f} {:4d} {:8.4f}'.format(row['residue_number'],x1_pred[0],x1_pred[1],x2_pred[0],x2_pred[1])
-
+	results = ('{:3d} {:4d} {:8.4f} {:4d} {:8.4f}'.format(row['residue_number'],x1_pred[0],x1_pred[1],x2_pred[0],x2_pred[1]))
+	print results
+	get.write(str(results))
+	get.write('\n')
 
 
 
