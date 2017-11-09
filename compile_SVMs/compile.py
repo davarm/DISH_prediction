@@ -5,7 +5,7 @@ from sklearn.svm import SVC
 from sklearn.externals import joblib
 import pickle
 
-df = pd.read_csv('./compile_SVMs/DISH_database.csv',  sep = ',',skipinitialspace = False)
+df = pd.read_csv('DISH_database.csv',  sep = ',',skipinitialspace = False)
 
 ################################################
 #----------------------------------

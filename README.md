@@ -42,6 +42,7 @@ UserWarning: Trying to unpickle estimator SVC from version 0.18.1 when using ver
 To fix this, you must re-compile the SVMs with the current version. 
 
 ``` 
+cd compile_SVMs
 python ./compile_SVMs/compile.py
 ``` 
 
@@ -49,9 +50,11 @@ python ./compile_SVMs/compile.py
 
 The inputs uses adjusted chemical shifts as well as predicted backbone dihedral angles from the Talos-N program (Shen and Bax, 2013). Ensure the directory output from Talos-N (with the predAdjCS.tab and pred.tab files). To this directory, add a text file called ‘connectivity.txt’ and define the cysteine parings as below:
 
+```
 8:20  
 15:26  
 1:6  
+```
 
 Run the ‘generating_DISH_inputs.py’ that will collate required information. Will save this as ‘DISH_inputs.csv’ in the Talos-N directory:
 ``` 
