@@ -149,7 +149,7 @@ for index,row in df.iterrows():
 	x1_pred   = x1_prediction(row)
 	row['x1'] = x1_pred[0]
 	x2_pred   = x2_prediction(row)
-	results = ('{:3d} {:4d} {:8.4f} {:4d} {:8.4f}'.format(row['residue_number'],x1_pred[0],x1_pred[1],x2_pred[0],x2_pred[1]))
+	results = ('{:3.0f} {:4d} {:8.4f} {:4d} {:8.4f}'.format(row['residue_number'],x1_pred[0],x1_pred[1],x2_pred[0],x2_pred[1]))
 	print results
 	get.write(str(results))
 	get.write('\n')
