@@ -32,7 +32,10 @@ python DISH_prediction.py 2n8e
 ``` 
 
 **** IMPORTANT *****
-The SVMs are saved as pickle objects, for this to work you must have the same version of sklearn. If this is not the case, you will see the following warning 
+The SVMs are saved as pickle objects, for this to work you must have the same version of sklearn. If this is not the case, you will see a warning that will look something like below:
+```
+UserWarning: Trying to unpickle estimator SVC from version 0.18.1 when using version 0.18.2. This might lead to breaking code or invalid results. Use at your own risk
+```
 
 ****
 
