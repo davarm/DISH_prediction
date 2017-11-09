@@ -172,7 +172,7 @@ for line in get:
 
 
 		### YOU CAN  CHOOSE TO COMMENT OUT HERE WHAT TALOS_N BACKBONE PREDICTIONS THAT YOU IGNORE
-		if lines[10] == 'None' or lines[10] == 'Warn' or lines[10] == 'Dyn':
+		if lines[10] == 'None'  or lines[10] == 'Dyn':#or lines[10] == 'Warn'
  			phi_dict[lines[0]] = 'N/A'
 			psi_dict[lines[0]] = 'N/A'
 		else:  

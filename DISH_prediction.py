@@ -10,7 +10,7 @@ from sklearn.externals import joblib
 import os
 os.getcwd()
 
-path    = ('./SVMs/')
+path    = ('./compile_SVMs/')
 get = open("./peptides/"+sys.argv[1]+"/DISH_prediction.txt",'w')
 
 # Load the SVMs, saved as .pkl files in 'SVMs' directory
@@ -44,14 +44,14 @@ def x1_prediction(inputs):
 					   		   'phi'       ,
 					   		   'psi']]
 
-	x1_stage1_inputs            = np.array(x1_stage1_inputs).reshape((1, -1))
-	x1_stage1_prediction_scores = (clf_x1_stage1.predict_proba(x1_stage1_inputs)[0]).tolist()
-	x1_stage1_prediction_index  = x1_stage1_prediction_scores.index(max(x1_stage1_prediction_scores))
-	x1_stage1_prediction        = x1_stage1_array[x1_stage1_prediction_index]
+	x1_stage1_inputs                 = np.array(x1_stage1_inputs).reshape((1, -1))
+	x1_stage1_prediction_index       = (clf_x1_stage1.predict(x1_stage1_inputs)[0])
+	x1_stage1_prediction_probability = ((clf_x1_stage1.predict_proba(x1_stage1_inputs)[0]).tolist())
+	x1_stage1_prediction             = x1_stage1_array[x1_stage1_prediction_index]
 
 	if x1_stage1_prediction == 60:
 		x1_prediction = 60
-		x1_prob       = max(x1_stage1_prediction_scores)
+		x1_prob       = x1_stage1_prediction_probability[x1_stage1_prediction_index]
 	#----------------------------------
 	# If the prediction is 'Other', move to 'STAGE 2' SVM
 	# Predciton of -60 or 180
@@ -59,6 +59,7 @@ def x1_prediction(inputs):
 
 	if x1_stage1_prediction == 'Other':
 		x1_stage2_array  = [-60, 180]
+
 
 		x1_stage2_inputs = inputs[['before_vdw_radi',
 								   'N'		        ,
@@ -72,11 +73,15 @@ def x1_prediction(inputs):
 								   'psi'            ,
 								   'hemi_psi']]
 
-		x1_stage2_inputs            = np.array(x1_stage2_inputs).reshape((1, -1))
-		x1_stage2_prediction_scores = (clf_x1_stage2.predict_proba(x1_stage2_inputs)[0]).tolist()
-		x1_stage2_prediction_index  = x1_stage2_prediction_scores.index(max(x1_stage2_prediction_scores))
-		x1_prediction               = x1_stage2_array[x1_stage2_prediction_index]
-		x1_prob                     = max(x1_stage2_prediction_scores)
+		x1_stage2_inputs                 = np.array(x1_stage2_inputs).reshape((1, -1))
+		
+		x1_stage2_inputs                 = np.array(x1_stage2_inputs).reshape((1, -1))
+		x1_stage2_prediction_index       = (clf_x1_stage2.predict(x1_stage2_inputs)[0])
+		x1_stage2_prediction_probability = ((clf_x1_stage2.predict_proba(x1_stage2_inputs)[0]).tolist())
+		x1_stage2_prediction             = x1_stage2_array[x1_stage2_prediction_index]
+		
+		x1_prob                          = x1_stage2_prediction_probability[x1_stage2_prediction_index]
+		x1_prediction                    = x1_stage2_prediction  
 
 	return(x1_prediction,x1_prob)
 
@@ -101,14 +106,14 @@ def x2_prediction(inputs):
 							   'x1']]
 
 
-	x2_stage1_inputs            = np.array(x2_stage1_inputs).reshape((1, -1))
-	x2_stage1_prediction_scores = (clf_x2_stage1.predict_proba(x2_stage1_inputs)[0]).tolist()
-	x2_stage1_prediction_index  = x2_stage1_prediction_scores.index(max(x2_stage1_prediction_scores))
-	x2_stage1_prediction        = x2_stage1_array[x2_stage1_prediction_index]
+	x2_stage1_inputs                 = np.array(x2_stage1_inputs).reshape((1, -1))
+	x2_stage1_prediction_index       = (clf_x2_stage1.predict(x2_stage1_inputs)[0])
+	x2_stage1_prediction_probability = ((clf_x2_stage1.predict_proba(x2_stage1_inputs)[0]).tolist())
+	x2_stage1_prediction             = x2_stage1_array[x2_stage1_prediction_index]
 
 	if x2_stage1_prediction == -60:
 		x2_prediction = -60
-		x2_prob       = max(x2_stage1_prediction_scores)
+		x2_prob       = x2_stage1_prediction_probability[x2_stage1_prediction_index]
 
 	#----------------------------------
 	# If the prediction is 'Other', move to 'STAGE 2' SVM
@@ -125,11 +130,13 @@ def x2_prediction(inputs):
 								   'hemi_CA',
 								   'x1']]
 
-		x2_stage2_inputs            = np.array(x2_stage2_inputs).reshape((1, -1))
-		x2_stage2_prediction_scores = (clf_x2_stage2.predict_proba(x2_stage2_inputs)[0]).tolist()
-		x2_stage2_prediction_index  = x2_stage2_prediction_scores.index(max(x2_stage2_prediction_scores))
-		x2_prediction               = x2_stage2_array[x2_stage2_prediction_index]
-		x2_prob                     = max(x2_stage2_prediction_scores)
+		x2_stage2_inputs                 = np.array(x2_stage2_inputs).reshape((1, -1))
+		x2_stage2_inputs                 = np.array(x2_stage2_inputs).reshape((1, -1))
+		x2_stage2_prediction_index       = (clf_x2_stage2.predict(x2_stage2_inputs)[0])
+		x2_stage2_prediction_probability = ((clf_x2_stage2.predict_proba(x2_stage2_inputs)[0]).tolist())
+		x2_stage2_prediction             = x2_stage2_array[x2_stage2_prediction_index]
+		x2_prediction                    = x2_stage2_prediction
+		x2_prob                          = x2_stage2_prediction_probability[x2_stage2_prediction_index]
 
 	return(x2_prediction, x2_prob)
 
