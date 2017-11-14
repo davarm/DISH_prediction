@@ -43,7 +43,7 @@ To fix this, you must re-compile the SVMs with the current version.
 
 ``` 
 cd compile_SVMs
-python ./compile_SVMs/compile.py
+python compile.py
 ``` 
 
 # Using DISH
