@@ -8,7 +8,7 @@ import os,sys
 
 # Script to generate the required inputs for the DISH program
 # Chemical shift, sequence and backbone angles are extracted from TALOS-N files (README)
-# Must have at minimum the 'pred.tab' and 'predAdjCS.tab' files
+# Must have at minimum the 'pred.tab', 'predAdjCS.tab' and 'predSS.tab' files
 # These should NOT be changed. The sequence is extracted from the pred.tab file
 # Must also have an additional 'connectivity.txt' file that defines correct cysteine pairings 
 # The program does not predict termini cysteines and therefore they are excluded
@@ -33,10 +33,6 @@ cysteine_dict =  OrderedDict()
 for nuclei in nuclei_list:
 	cysteine_dict['Cys1_'        + nuclei] = [] 
 	cysteine_dict['Cys2_'        + nuclei] = []
-	cysteine_dict['Cys1_after_'  + nuclei] = []
-	cysteine_dict['Cys2_after_'  + nuclei] = []
-	cysteine_dict['Cys1_before_' + nuclei] = []
-	cysteine_dict['Cys2_before_' + nuclei] = []
 	
 	
 cysteine_dict['PDB'                ] = []
@@ -46,19 +42,12 @@ cysteine_dict['Cys2_phi'           ] = []
 cysteine_dict['Cys2_psi'           ] = []
 cysteine_dict['residue_1'          ] = []
 cysteine_dict['residue_2'          ] = []
-cysteine_dict['Cys1_after_psi'     ] = []
-cysteine_dict['Cys1_after_phi'     ] = []
-cysteine_dict['Cys2_after_phi'     ] = []
-cysteine_dict['Cys2_after_psi'     ] = []
-cysteine_dict['Cys1_before_phi'    ] = []
-cysteine_dict['Cys1_before_psi'    ] = []
-cysteine_dict['Cys2_before_phi'    ] = []
-cysteine_dict['Cys2_before_psi'    ] = []
 cysteine_dict['Cys1_after_residue' ] = []
 cysteine_dict['Cys2_after_residue' ] = []
 cysteine_dict['Cys1_before_residue'] = []
 cysteine_dict['Cys2_before_residue'] = []
-	
+cysteine_dict['Cys1_SS'] = []
+cysteine_dict['Cys2_SS'] = []
 
 
 # Initiate dataframe to store information
@@ -124,8 +113,11 @@ for line in get:
 				sequence = "".join(sequence)
 		# TAke chemical shifts and strore into dictionary 
 		lines = line.split(' ')
-		adjusted_chemical_shift_dict[lines[0]+','+lines[2]]=lines[3]
+		try:
 
+			adjusted_chemical_shift_dict[lines[0]+','+lines[2]]=lines[3]
+		except IndexError:
+			continue
 	
 
 #----------------------------
@@ -172,16 +164,43 @@ for line in get:
 
 
 		### YOU CAN  CHOOSE TO COMMENT OUT HERE WHAT TALOS_N BACKBONE PREDICTIONS THAT YOU IGNORE
-		if lines[10] == 'None'  or lines[10] == 'Dyn':#or lines[10] == 'Warn'
+		if lines[10] != 'Strong' and lines[10] != 'Generous':
  			phi_dict[lines[0]] = 'N/A'
 			psi_dict[lines[0]] = 'N/A'
-		else:  
+			if lines[1] == 'c':
+				print 'WARNING: Backbone dihedral angles for', lines[0], 'are not predicted and must be input manually'
+		
+		if lines[1] == 'c' and lines[10] == 'Generous':
+			print 'WARNING: Backbone dihedral angles for', lines[0], 'is a Generous prediction. Should be checked against structure'		
+		if lines[10] == 'Strong' or lines[10] == 'Generous': 
 			phi_dict[lines[0]] = lines[2]
 			psi_dict[lines[0]] = lines[3]
 get.close()   
 
+#---------------------------------------------------------------------	
+#### SECONDARY STRUCTURE
+#---------------------------------------------------------------------	
 
+ss_dict      = {}
+ss_dict['0'] = 'NaN'
+ss_dict[str(len(sequence)+1)] = 'N/A'
+get           = open(path+'/predSS.tab','r')
 
+for line in get:
+		line  = " ".join(line.split())
+		lines = line.split(' ')
+		if 'REMARK' in line:
+			continue 
+		if 'VARS' in line:
+			continue
+		if 'FORMAT' in line:
+			continue
+		if 'DATA' in line:
+			continue  
+		if len(line) == 0:
+			continue
+
+		ss_dict[lines[0]] = lines[8]
 #---------------------------------------------------------------------------------
 #All of the shift and angle information has been stored in dictionaries
 #Can now go through each connectivity in the previously stored 'Connectivity list'
@@ -198,29 +217,20 @@ get.close()
 # Peptide name: Chain: Cys1: Chain: 
 # Cys2: Cys1 Nuclei: Cys2 Nuclei:
 # X1,X2,X3,X2',X1'
-# Cys1 Phi,Psi,X1  
+# Cys1 Phi,Psi,X1
+# Cys1 secondary structure  
 # Cys2 Phi,Psi,X1
 
 #  NEIGHBOURING INFORMATION For Cys1
-# Cys1_before Nuclei
-# Cys1_before Phi,Psi,X1
-# Cys1_before residue type
-
-# Cys1_after Nuclei
-# Cys1_after Phi,Psi,X1
-# Cys1_after residue type--
-
-# NEI2HBOURING INFORMATION For Cys1
-# Cys2_before Nuclei
-# Cys2_before Phi,Psi,X1
-# Cys2_before residue type
-
-# Cys2_after Nuclei
-# Cys2_after Phi,Psi,X1
-# Cys2_after residue type
+# Cys1_before vdw
 #---------------------------------------------------------------------------------
 
-
+average_dict       = {}
+average_dict['HA'] = 0.117
+average_dict['HN'] = 0.067
+average_dict['CA'] = 0.453
+average_dict['CB'] = 1.422
+average_dict['N' ] = 1.307
 #For each connectivity
 for connectivity in connectivity_list:
 			connectivity = [int(x) for x in connectivity]
@@ -249,7 +259,8 @@ for connectivity in connectivity_list:
 				try:
 					value = adjusted_chemical_shift_dict[residue+','+nuclei]
 				except KeyError:
-					value =  0
+					print 'Warning: Unassigned chemical shift Replaced with average', residue, nuclei
+					value =  average_dict[nuclei]
 				return (value)
 
 			#------------------------------------------------------------------------
@@ -260,28 +271,16 @@ for connectivity in connectivity_list:
 
 				cysteine_dict['Cys1_'       +nuclei].append(chemical_shift(cys1,nuclei       ))
 				cysteine_dict['Cys2_'		+nuclei].append(chemical_shift(cys2,nuclei       ))
-				cysteine_dict['Cys1_before_'+nuclei].append(chemical_shift(cys1_before,nuclei))
-				cysteine_dict['Cys2_before_'+nuclei].append(chemical_shift(cys2_before,nuclei))
-				cysteine_dict['Cys1_after_' +nuclei].append(chemical_shift(cys1_after,nuclei ))
-				cysteine_dict['Cys2_after_' +nuclei].append(chemical_shift(cys2_after,nuclei ))
-
 			#------------------------------------------------------------------------
 			# Adding in the Backbones
 			#------------------------------------------------------------------------
-		
 			cysteine_dict['Cys1_phi'       ].append(phi_dict[cys1		])
 			cysteine_dict['Cys1_psi'       ].append(psi_dict[cys1		])
 			cysteine_dict['Cys2_phi'       ].append(phi_dict[cys2		])
 			cysteine_dict['Cys2_psi'       ].append(psi_dict[cys2		])
-			cysteine_dict['Cys1_before_phi'].append(phi_dict[cys1_before])
-			cysteine_dict['Cys1_before_psi'].append(psi_dict[cys1_before])
-			cysteine_dict['Cys2_before_phi'].append(phi_dict[cys2_before]) 
-			cysteine_dict['Cys2_before_psi'].append(psi_dict[cys2_before])
-			cysteine_dict['Cys1_after_phi' ].append(phi_dict[cys1_after	])
-			cysteine_dict['Cys1_after_psi' ].append(psi_dict[cys1_after	])
-			cysteine_dict['Cys2_after_phi' ].append(phi_dict[cys2_after	])
-			cysteine_dict['Cys2_after_psi' ].append(psi_dict[cys2_after	])
-			
+			cysteine_dict['Cys1_SS'        ].append(ss_dict[cys1		])
+			cysteine_dict['Cys2_SS'        ].append(ss_dict[cys2		])
+
 			#------------------------------------------------------------------------
 			# Adding in residues before
 			#------------------------------------------------------------------------
@@ -349,8 +348,26 @@ def vdw_radi(residue):
 df['Cys1_before_residue_VDW']  = df['Cys1_before_residue'].apply(vdw_radi)
 df['Cys2_before_residue_VDW']  = df['Cys2_before_residue'].apply(vdw_radi)
 
-df['Cys1_after_residue_VDW' ]  = df['Cys1_after_residue' ].apply(vdw_radi)
-df['Cys2_after_residue_VDW' ]  = df['Cys2_after_residue' ].apply(vdw_radi)
+
+
+#------------------------------------------------------------------------
+# Convert SS into array
+#------------------------------------------------------------------------	
+def ss_array(ss):
+		
+		secondary_structure_list = [
+			'H',
+			'E',
+			'L'] 
+		#print ss
+		ss_hot_array 									 = [0. for _ in range(3)]  
+		ss_hot_array[secondary_structure_list.index(ss)] = 1
+		ss_hot_array                                     = [str(x) for x in ss_hot_array]
+		ss_hot_array                                     = ",".join(ss_hot_array)
+		return (ss_hot_array)
+
+df['Cys1_SS_array']  = df['Cys1_SS'].apply(ss_array)
+df['Cys2_SS_array']  = df['Cys2_SS'].apply(ss_array)
 
 #----------------------------------
 # SPLIT INTO INDIVIDUAL HEMI-CYSTEINES, WITH INFORMATION OF CORRESPONDING HEMI-CYSTEINE REQUIRED FOR DISH INPUTS
@@ -365,14 +382,14 @@ new_columns = ["PDB"
 "CA"				
 "CB"				
 "psi"				
-"phi"				
-"before_psi"		
+"phi"
+"ss_array"				
 "before_vdw_radi"
-"after_vdw_radi"
 "hemi_CA"			
 "hemi_CB"			
 "hemi_psi"			
-"hemi_phi"]	
+"ss"
+"ss_array"]	
 
 df_  = pd.DataFrame(index = None,columns = new_columns)
 df_  =  pd.DataFrame({                                                
@@ -386,13 +403,13 @@ df_  =  pd.DataFrame({
 			"CB"				:df["Cys1_CB"                ],
 			"psi"				:df["Cys1_psi"               ],
 			"phi"				:df["Cys1_phi"               ],
-			"before_psi"		:df["Cys1_before_psi"        ],
 			"before_vdw_radi"	:df["Cys1_before_residue_VDW"],
-			"after_vdw_radi"	:df["Cys1_after_residue_VDW" ],
+			"ss"				:df["Cys1_SS" 				 ],
+			"ss_array"			:df["Cys1_SS_array" 		 ],
 			"hemi_CA"			:df["Cys2_CA"                ],
 			"hemi_CB"			:df["Cys2_CB"                ],
-			"hemi_psi"			:df["Cys2_psi"               ],
-			"hemi_phi"			:df["Cys2_phi"               ]})
+			"hemi_N"			:df["Cys2_N"                ],
+			"hemi_psi"			:df["Cys2_psi"               ]})
 	
 	
 	
@@ -408,13 +425,13 @@ df__  =  pd.DataFrame({
 			"CB"				:df["Cys2_CB"                ],
 			"psi"				:df["Cys2_psi"               ],
 			"phi"				:df["Cys2_phi"               ],
-			"before_psi"		:df["Cys2_before_psi"        ],
 			"before_vdw_radi"	:df["Cys2_before_residue_VDW"],
-			"after_vdw_radi"	:df["Cys2_after_residue_VDW" ],
+			"ss"				:df["Cys2_SS" 				 ],
+			"ss_array"			:df["Cys2_SS_array" 		 ],
 			"hemi_CA"			:df["Cys1_CA"                ],
 			"hemi_CB"			:df["Cys1_CB"                ],
-			"hemi_psi"			:df["Cys1_psi"               ],
-			"hemi_phi"			:df["Cys1_phi"               ]})
+			"hemi_N"			:df["Cys1_N"                ],
+			"hemi_psi"			:df["Cys1_psi"               ]})
 	
 
 df_split = df_.append(df__, ignore_index = True)
@@ -430,36 +447,22 @@ df_split = df_split[["PDB",
 "CB",				
 "psi",				
 "phi",				
-"before_psi",		
 "before_vdw_radi",
-"after_vdw_radi",
+"ss",
+"ss_array",
 "hemi_CA",			
 "hemi_CB",			
-"hemi_psi",			
-"hemi_phi"]]
+"hemi_N",			
+"hemi_psi"]]
 
 
 
 
 df_split = df_split.loc[df_split['before_vdw_radi'] != 0]
-df_split = df_split.loc[df_split['after_vdw_radi']  != 0]
-
-#----------------------------------
-#
-# IF TALOS-N DOES NOT MAKE A PREDICTION FOR BACKBONE ANGLES, SUBSTITUTE WITH 0s.
-# Psi average = +75
-# Phi Average = -92
-# Before_psi_average = + 63
-#----------------------------------
 
 
-df_split['psi'       ] = df_split['psi'  	  ].replace('N/A',75 )
-df_split['phi'       ] = df_split['phi'  	  ].replace('N/A',-92)
-df_split['hemi_psi'  ] = df_split['hemi_psi'  ].replace('N/A',75 )
-df_split['hemi_phi'  ] = df_split['hemi_phi'  ].replace('N/A',-92)
-df_split['before_psi'] = df_split['before_psi'].replace('N/A',63 )
-
-
+df_split['residue_number'] = df_split['residue_number'].astype(int)
+df_split = df_split.sort_values("residue_number")
 print df_split
 df_split                        = df_split.replace(r'\s+', np.nan, regex=True)
 df_split.to_csv(path+'/DISH_inputs.csv',index = False)
