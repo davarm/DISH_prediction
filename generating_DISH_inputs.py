@@ -354,7 +354,9 @@ df['Cys2_before_residue_VDW']  = df['Cys2_before_residue'].apply(vdw_radi)
 # Convert SS into array
 #------------------------------------------------------------------------	
 def ss_array(ss):
-		
+		ss = ss.upper()
+		if ss == 'C':
+			ss = 'L'
 		secondary_structure_list = [
 			'H',
 			'E',
